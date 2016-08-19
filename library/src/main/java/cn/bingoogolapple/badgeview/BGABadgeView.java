@@ -78,4 +78,9 @@ public class BGABadgeView extends View implements BGABadgeable {
     public BGABadgeViewHelper getBadgeViewHelper() {
         return mBadgeViewHeler;
     }
+
+    @Override
+    public void setBadgeClickListen(BGADragOnClickDelegate delegate) {
+        mBadgeViewHeler.setOnclickDelegage(delegate);
+    }
 }

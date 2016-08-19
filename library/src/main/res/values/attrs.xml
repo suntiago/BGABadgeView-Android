@@ -18,6 +18,9 @@
             <enum name="rightTop" value="0" />
             <enum name="rightCenter" value="1" />
             <enum name="rightBottom" value="2" />
+            <enum name="leftTop" value="3" />
+            <enum name="leftCenter" value="4" />
+            <enum name="leftBottom" value="5" />
         </attr>
         <!-- 是否可以拖拽删除徽章 -->
         <attr name="badge_dragable" format="boolean" />
@@ -29,5 +32,8 @@
         <attr name="badge_borderColor" format="reference|color" />
         <!-- 触发开始拖拽徽章事件的扩展触摸距离 -->
         <attr name="badge_dragExtra" format="reference|dimension" />
+        <!-- 是否 点击事件自定义处理 -->
+        <attr name="badge_clickHandle" format="reference|dimension" />
+
     </declare-styleable>
 </resources>

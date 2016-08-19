@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
         mTestBll.showDrawableBadge(avatorBadgeBitmap);
         mTestBrl.showTextBadge("LoveAndroid");
+
         mTestBfl.showTextBadge("8");
 
         mChatBfab.showTextBadge("8");

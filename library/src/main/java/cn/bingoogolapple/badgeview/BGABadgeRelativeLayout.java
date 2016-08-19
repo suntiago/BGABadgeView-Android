@@ -94,4 +94,9 @@ public class BGABadgeRelativeLayout extends RelativeLayout implements BGABadgeab
     public BGABadgeViewHelper getBadgeViewHelper() {
         return mBadgeViewHeler;
     }
+
+    @Override
+    public void setBadgeClickListen(BGADragOnClickDelegate delegate) {
+        mBadgeViewHeler.setOnclickDelegage(delegate);
+    }
 }

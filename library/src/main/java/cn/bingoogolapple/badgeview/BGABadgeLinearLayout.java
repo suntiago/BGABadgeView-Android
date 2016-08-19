@@ -90,4 +90,9 @@ public class BGABadgeLinearLayout extends LinearLayout implements BGABadgeable {
     public BGABadgeViewHelper getBadgeViewHelper() {
         return mBadgeViewHeler;
     }
+
+    @Override
+    public void setBadgeClickListen(BGADragOnClickDelegate delegate) {
+        mBadgeViewHeler.setOnclickDelegage(delegate);
+    }
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright 2015 bingoogolapple
- * <p/>
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p/>
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p/>
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -118,7 +118,10 @@ public class BGABadgeViewHelper {
      * 拖动大于BGABadgeViewHelper.mMoveHiddenThreshold后抬起手指徽章消失的代理
      */
     private BGADragDismissDelegate mDelegage;
+    private BGADragOnClickDelegate mOnclickDelegage = null;
     private boolean mIsShowDrawable = false;
+
+    private boolean mEnableClickHandle = false;
 
     public BGABadgeViewHelper(BGABadgeable badgeable, Context context, AttributeSet attrs, BadgeGravity defaultBadgeGravity) {
         mBadgeable = badgeable;
@@ -160,6 +163,7 @@ public class BGABadgeViewHelper {
 
         mDragExtra = BGABadgeViewUtil.dp2px(context, 4);
         mBadgeDragExtraRectF = new RectF();
+        mEnableClickHandle = false;
     }
 
     private void initCustomAttrs(Context context, AttributeSet attrs) {
@@ -197,6 +201,8 @@ public class BGABadgeViewHelper {
             mBadgeBorderColor = typedArray.getColor(attr, mBadgeBorderColor);
         } else if (attr == R.styleable.BGABadgeView_badge_dragExtra) {
             mDragExtra = typedArray.getDimensionPixelSize(attr, mDragExtra);
+        } else if (attr == R.styleable.BGABadgeView_badge_clickHandle) {
+            mEnableClickHandle = typedArray.getBoolean(attr, mEnableClickHandle);
         }
     }
 
@@ -282,6 +288,10 @@ public class BGABadgeViewHelper {
 
                 if ((mBadgeBorderWidth == 0 || mIsShowDrawable) && mDragable && mIsShowBadge && mBadgeDragExtraRectF.contains(event.getX(), event.getY())) {
                     mIsDraging = true;
+                    if (getEnableClickHandle()) {
+                        mDropBadgeView.onTouchEvent(event);
+                        return true;
+                    }
                     mBadgeable.getParent().requestDisallowInterceptTouchEvent(true);
 
                     Rect badgeableRect = new Rect();
@@ -324,6 +334,10 @@ public class BGABadgeViewHelper {
         mBadgeable.postInvalidate();
     }
 
+    public void onclickBadge(View v) {
+        mOnclickDelegage.onClick(v);
+    }
+
     public void drawBadge(Canvas canvas) {
         if (mIsShowBadge && !mIsDraging) {
             if (mIsShowDrawable) {
@@ -340,6 +354,7 @@ public class BGABadgeViewHelper {
      * @param canvas
      */
     private void drawDrawableBadge(Canvas canvas) {
+        int badgeWidth = mBadgeable.getWidth();
         mBadgeRectF.left = mBadgeable.getWidth() - mBadgeHorizontalMargin - mBitmap.getWidth();
         mBadgeRectF.top = mBadgeVerticalMargin;
         switch (mBadgeGravity) {
@@ -351,6 +366,24 @@ public class BGABadgeViewHelper {
                 break;
             case RightBottom:
                 mBadgeRectF.top = mBadgeable.getHeight() - mBitmap.getHeight() - mBadgeVerticalMargin;
+                break;
+            case LeftTop:
+                mBadgeRectF.top = mBadgeVerticalMargin;
+                // 计算徽章背景左右的值
+                mBadgeRectF.left = mBadgeHorizontalMargin;
+                mBadgeRectF.right = mBadgeRectF.left + badgeWidth;
+                break;
+            case LeftCenter:
+                mBadgeRectF.top = (mBadgeable.getHeight() - mBitmap.getHeight()) / 2;
+                // 计算徽章背景左右的值
+                mBadgeRectF.left = mBadgeHorizontalMargin;
+                mBadgeRectF.right = mBadgeRectF.left + badgeWidth;
+                break;
+            case LeftBottom:
+                mBadgeRectF.top = mBadgeable.getHeight() - mBitmap.getHeight() - mBadgeVerticalMargin;
+                // 计算徽章背景左右的值
+                mBadgeRectF.left = mBadgeHorizontalMargin;
+                mBadgeRectF.right = mBadgeRectF.left + badgeWidth;
                 break;
             default:
                 break;
@@ -388,21 +421,45 @@ public class BGABadgeViewHelper {
         switch (mBadgeGravity) {
             case RightTop:
                 mBadgeRectF.bottom = mBadgeRectF.top + badgeHeight;
+                // 计算徽章背景左右的值
+                mBadgeRectF.right = mBadgeable.getWidth() - mBadgeHorizontalMargin;
+                mBadgeRectF.left = mBadgeRectF.right - badgeWidth;
                 break;
             case RightCenter:
                 mBadgeRectF.top = (mBadgeable.getHeight() - badgeHeight) / 2;
                 mBadgeRectF.bottom = mBadgeRectF.top + badgeHeight;
+                // 计算徽章背景左右的值
+                mBadgeRectF.right = mBadgeable.getWidth() - mBadgeHorizontalMargin;
+                mBadgeRectF.left = mBadgeRectF.right - badgeWidth;
                 break;
             case RightBottom:
                 mBadgeRectF.top = mBadgeRectF.bottom - badgeHeight;
+                // 计算徽章背景左右的值
+                mBadgeRectF.right = mBadgeable.getWidth() - mBadgeHorizontalMargin;
+                mBadgeRectF.left = mBadgeRectF.right - badgeWidth;
+                break;
+            case LeftTop:
+                mBadgeRectF.bottom = mBadgeRectF.top + badgeHeight;
+                // 计算徽章背景左右的值
+                mBadgeRectF.left = mBadgeHorizontalMargin;
+                mBadgeRectF.right = mBadgeRectF.left + badgeWidth;
+                break;
+            case LeftCenter:
+                mBadgeRectF.top = (mBadgeable.getHeight() - badgeHeight) / 2;
+                mBadgeRectF.bottom = mBadgeRectF.top + badgeHeight;
+                // 计算徽章背景左右的值
+                mBadgeRectF.left = mBadgeHorizontalMargin;
+                mBadgeRectF.right = mBadgeRectF.left + badgeWidth;
+                break;
+            case LeftBottom:
+                mBadgeRectF.top = mBadgeRectF.bottom - badgeHeight;
+                // 计算徽章背景左右的值
+                mBadgeRectF.left = mBadgeHorizontalMargin;
+                mBadgeRectF.right = mBadgeRectF.left + badgeWidth;
                 break;
             default:
                 break;
         }
-
-        // 计算徽章背景左右的值
-        mBadgeRectF.right = mBadgeable.getWidth() - mBadgeHorizontalMargin;
-        mBadgeRectF.left = mBadgeRectF.right - badgeWidth;
 
         if (mBadgeBorderWidth > 0) {
             // 设置徽章边框景色
@@ -497,6 +554,19 @@ public class BGABadgeViewHelper {
         mDelegage = delegage;
     }
 
+    public void setOnclickDelegage(BGADragOnClickDelegate onclickDelegage) {
+        mOnclickDelegage = onclickDelegage;
+        if (mOnclickDelegage != null) {
+            mEnableClickHandle = true;
+        } else {
+            mEnableClickHandle = false;
+        }
+    }
+
+    public boolean getEnableClickHandle() {
+        return mEnableClickHandle;
+    }
+
     public View getRootView() {
         return mBadgeable.getRootView();
     }
@@ -508,6 +578,9 @@ public class BGABadgeViewHelper {
     public enum BadgeGravity {
         RightTop,
         RightCenter,
-        RightBottom
+        RightBottom,
+        LeftTop,
+        LeftCenter,
+        LeftBottom,
     }
 }
