@@ -98,5 +98,6 @@ public class BGABadgeRadioButton extends RadioButton implements BGABadgeable {
     @Override
     public void setBadgeClickListen(BGADragOnClickDelegate delegate) {
         mBadgeViewHeler.setOnclickDelegage(delegate);
+        mBadgeViewHeler.setDragable(true);
     }
 }

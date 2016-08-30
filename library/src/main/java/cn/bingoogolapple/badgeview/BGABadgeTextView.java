@@ -88,6 +88,7 @@ public class BGABadgeTextView extends TextView implements BGABadgeable {
     @Override
     public void setBadgeClickListen(BGADragOnClickDelegate delegate) {
         mBadgeViewHeler.setOnclickDelegage(delegate);
+        mBadgeViewHeler.setDragable(true);
     }
 
     @Override

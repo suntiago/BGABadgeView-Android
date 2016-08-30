@@ -98,5 +98,6 @@ public class BGABadgeImageView extends ImageView implements BGABadgeable {
     @Override
     public void setBadgeClickListen(BGADragOnClickDelegate delegate) {
         mBadgeViewHeler.setOnclickDelegage(delegate);
+        mBadgeViewHeler.setDragable(true);
     }
 }

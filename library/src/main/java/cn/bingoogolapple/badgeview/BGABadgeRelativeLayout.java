@@ -98,5 +98,6 @@ public class BGABadgeRelativeLayout extends RelativeLayout implements BGABadgeab
     @Override
     public void setBadgeClickListen(BGADragOnClickDelegate delegate) {
         mBadgeViewHeler.setOnclickDelegage(delegate);
+        mBadgeViewHeler.setDragable(true);
     }
 }

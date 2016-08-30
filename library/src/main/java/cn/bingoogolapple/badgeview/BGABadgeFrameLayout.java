@@ -99,5 +99,6 @@ public class BGABadgeFrameLayout extends FrameLayout implements BGABadgeable {
     @Override
     public void setBadgeClickListen(BGADragOnClickDelegate delegate) {
         mBadgeViewHeler.setOnclickDelegage(delegate);
+        mBadgeViewHeler.setDragable(true);
     }
 }
